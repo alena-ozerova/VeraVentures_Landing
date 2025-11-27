@@ -1,0 +1,158 @@
+"use client";
+
+import { memo, useCallback, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
+import { animate } from "framer-motion";
+
+interface GlowingEffectProps {
+  blur?: number;
+  inactiveZone?: number;
+  proximity?: number;
+  spread?: number;
+  variant?: "default" | "white";
+  glow?: boolean;
+  className?: string;
+  disabled?: boolean;
+  movementDuration?: number;
+  borderWidth?: number;
+}
+
+const GlowingEffect = memo(
+  ({
+    blur = 0,
+    inactiveZone = 0.7,
+    proximity = 60,
+    spread = 40,
+    variant = "default",
+    glow = false,
+    className,
+    movementDuration = 2,
+    borderWidth = 1,
+    disabled = true,
+  }: GlowingEffectProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const animationFrameRef = useRef<number>();
+
+    const handleMove = useCallback(
+      (e?: MouseEvent | PointerEvent) => {
+        if (!containerRef.current || disabled) return;
+
+        const container = containerRef.current;
+        const { width, height, left, top } = container.getBoundingClientRect();
+
+        let mouseX = e?.clientX ?? 0;
+        let mouseY = e?.clientY ?? 0;
+
+        if (!e) {
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+
+          mouseX = centerX;
+          mouseY = centerY;
+        }
+
+        const center = [left + width * 0.5, top + height * 0.5];
+        const distanceFromCenter = Math.hypot(
+          mouseX - center[0],
+          mouseY - center[1],
+        );
+        const inactiveRadius = 0.5 * Math.min(width, height) * inactiveZone;
+
+        const isActive = distanceFromCenter > inactiveRadius;
+
+        let targetAngle =
+          (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) /
+            Math.PI +
+            90;
+
+        const angleDiff = ((targetAngle - 0 + 180) % 360) - 180;
+        const newAngle = 0 + angleDiff;
+
+        animate(0, newAngle, {
+          duration: movementDuration,
+          ease: [0.16, 1, 0.3, 1],
+          onUpdate: (value) => {
+            container.style.setProperty("--start", String(value));
+          },
+        });
+      },
+      [inactiveZone, proximity, movementDuration],
+    );
+
+    useEffect(() => {
+      if (disabled) return;
+
+      const handleScroll = () => handleMove();
+      const handlePointerMove = (e: PointerEvent) => handleMove(e);
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      document.body.addEventListener("pointermove", handlePointerMove, {
+        passive: true,
+      });
+
+      return () => {
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+        window.removeEventListener("scroll", handleScroll);
+        document.body.removeEventListener("pointermove", handlePointerMove);
+      };
+    }, [handleMove, disabled]);
+
+    return (
+      <>
+        <div
+          className={cn(
+            "pointer-events-none absolute -inset-2 hidden rounded-3xl opacity-0 transition-opacity",
+            glow && "opacity-100",
+            variant === "white" && "border-white",
+            disabled && "!block",
+            className,
+          )}
+        />
+        <div
+          ref={containerRef}
+          style={{
+            "--blur": ,
+              "--spread": spread,
+              "--start": "0",
+              "--active": "0",
+              "--glowingeffect-border-width": ,
+              "--repeating-conic-gradient-times": "5",
+              "--gradient":
+                variant === "white"
+                  ? 
+                  : ,
+            }} as React.CSSProperties
+          }}
+          className={cn(
+            "pointer-events-none absolute -inset-2 opacity-100 transition-opacity",
+            glow && "opacity-100",
+            blur > 0 && "blur-[var(--blur)] ",
+            className,
+            disabled && "!hidden",
+            "rounded-3xl",
+          )}
+        >
+          <div
+            className={cn(
+              "glow",
+              "rounded-3xl",
+              'after:content-[""] after:rounded-3xl after:absolute after:inset-[calc(-1*var(--glowingeffect-border-width))]",
+              "after:[border:var(--glowingeffect-border-width)_solid_transparent]",
+              "after:[background:var(--gradient)] after:[background-attachment:fixed]",
+              "after:opacity-[var(--active)] after:transition-opacity after:duration-300",
+              "after:[mask-clip:padding-box,border-box]",
+              "after:[mask-composite:intersect]",
+              "after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]",
+            )}
+          />
+        </div>
+      </>
+    );
+  },
+);
+
+GlowingEffect.displayName = "GlowingEffect";
+
+export { GlowingEffect };
