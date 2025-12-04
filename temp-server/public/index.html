@@ -1,0 +1,331 @@
+
+```prolly last/vera-ventures/temp-server/public/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vera Ventures - The Community for Ambitious Founders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(to right, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        nav button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            margin-left: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        nav button:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.4);
+            transform: translateY(-2px);
+        }
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 0;
+            background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+        }
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            max-width: 900px;
+        }
+        .hero p {
+            font-size: 20px;
+            color: #ccc;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .cta-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 16px;
+        }
+        .cta-button.primary {
+            background: linear-gradient(to right, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .cta-button.primary:hover {
+            background: linear-gradient(to right, rgba(168, 85, 247, 0.4), rgba(59, 130, 246, 0.4));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.25);
+        }
+        .cta-button.secondary {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .cta-button.secondary:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateY(-3px);
+        }
+        .social-proof {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #999;
+        }
+        .features {
+            padding: 80px 0;
+        }
+        .features h2 {
+            font-size: 40px;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(to right, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+        }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 20px;
+            color: #a855f7;
+        }
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            color: #ccc;
+            line-height: 1.5;
+        }
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+        .cta-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .cta-section h2 {
+            font-size: 40px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .cta-section p {
+            font-size: 20px;
+            color: #ccc;
+            margin-bottom: 30px;
+            max-width: 700px;
+        }
+        .footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            color: #fff;
+        }
+        .copyright {
+            color: #666;
+            font-size: 14px;
+        }
+        .wave-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #000000 0%, #111111 100%);
+            overflow: hidden;
+        }
+        .wave {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+            animation: wave 15s linear infinite;
+        }
+        .wave:nth-child(2) {
+            animation-delay: -5s;
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        }
+        .wave:nth-child(3) {
+            animation-delay: -10s;
+            background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 70%);
+        }
+        @keyframes wave {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wave-bg">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">Vera Ventures</div>
+            <nav>
+                <button onclick="location.href='auth/signup.html'">Sign Up</button>
+                <button onclick="location.href='auth/login.html'">Sign In</button>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1>The Community for Ambitious Founders</h1>
+            <p>Connect with peers, access expert resources, and scale your venture faster.</p>
+            <div class="cta-buttons">
+                <button class="cta-button primary" onclick="location.href='auth/signup.html'">Join Community</button>
+                <button class="cta-button secondary" onclick="location.href='auth/login.html'">Member Login</button>
+            </div>
+            <div class="social-proof">Join over 500+ founders who are already building the future with us</div>
+        </section>
+
+        <section class="features">
+            <h2>Why Join?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h3>Expert Network</h3>
+                    <p>Connect with industry leaders, experienced founders, and potential investors who can accelerate your journey.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3>Exclusive Resources</h3>
+                    <p>Access premium tools, templates, and content designed specifically for early-stage startups.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3>Private Events</h3>
+                    <p>Join exclusive workshops, pitch sessions, and networking events unavailable to general public.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-card">
+                <h2>Ready to Build the Future?</h2>
+                <p>Join our community of ambitious founders and access the resources you need to succeed.</p>
+                <div class="cta-buttons">
+                    <button class="cta-button primary" onclick="location.href='auth/signup.html'">Start Your Journey</button>
+                    <button class="cta-button secondary" onclick="location.href='auth/login.html'">Member Login</button>
+                </div>
+                <div class="social-proof">Join 500+ founders already scaling their ventures with us</div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+            </div>
+            <div class="copyright">&copy; 2025 Vera Ventures. All rights reserved.</div>
+        </footer>
+    </div>
+</body>
+</html>

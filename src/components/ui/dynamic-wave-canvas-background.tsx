@@ -15,7 +15,7 @@ const HeroWave = () => {
     let height: number;
     let imageData: ImageData;
     let data: Uint8ClampedArray;
-    const SCALE = 2;
+    const SCALE = 1; // Lower scale for higher quality
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;

@@ -6,6 +6,10 @@ import BenefitsSection from "@/components/sections/landing/BenefitsSection";
 import CTASection from "@/components/sections/landing/CTASection";
 import Footer from "@/components/layout/Footer";
 
+// Performance tip: If animations are lagging, you can reduce the
+// SCALE value in dynamic-wave-canvas-background.tsx (line 18) to a higher number
+// or switch to a static background for best performance
+
 export default function LandingPage() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">

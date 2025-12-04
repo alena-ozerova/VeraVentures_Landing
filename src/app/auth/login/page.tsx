@@ -1,13 +1,101 @@
 "use client";
-import React, { useActionState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import Link from "next/link";
-import { signIn } from "@/lib/actions/auth";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(signIn, null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      // Reset error message before new attempt
+      setError("");
+
+      // Call API endpoint for authentication
+      console.log("Attempting login with email:", email);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      console.log("Login response status:", response.status);
+
+      if (!response.ok) {
+        let errorData: any = {};
+        try {
+          errorData = await response.json();
+          console.error("Login error response (JSON):", errorData);
+        } catch (jsonError) {
+          console.error("Failed to parse error response as JSON:", jsonError);
+          try {
+            const textResponse = await response.text();
+            console.error("Login error response (text):", textResponse);
+            errorData = {
+              error: textResponse || `HTTP error! status: ${response.status}`,
+            };
+          } catch (textError) {
+            console.error("Failed to get error response as text:", textError);
+            errorData = { error: `HTTP error! status: ${response.status}` };
+          }
+        }
+
+        setError(errorData.error || `HTTP error! status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Login response data:", data);
+
+      if (data.success) {
+        // Set up session regardless of demo mode or Supabase
+        const supabase = createClient();
+        const { error } = await supabase.auth.setSession({
+          access_token: data.session?.access_token,
+          refresh_token: data.session?.refresh_token,
+        });
+
+        if (error) {
+          console.error("Session setup error:", error);
+          setError(error.message || "Failed to establish session");
+        } else {
+          console.log("Login successful, redirecting to landing page");
+          setError("");
+          setSuccess(data.message || "Login successful");
+          // Redirect after a short delay to allow the success message to be seen
+          setTimeout(() => {
+            router.push("/landing");
+          }, 1000);
+        }
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch (error: unknown) {
+      console.error("Login fetch error:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An error occurred during sign in";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -19,12 +107,17 @@ export default function LoginPage() {
 
       {/* Login Form */}
       <div className="bg-black/60 backdrop-blur-sm border border-white/10 rounded-xl p-6 overflow-hidden">
-        {state?.error && (
+        {error && (
           <div className="mb-4 p-3 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm">
-            {state.error}
+            {error}
           </div>
         )}
-        <form action={formAction} className="space-y-4">
+        {success && (
+          <div className="mb-4 p-3 bg-green-900/50 border border-green-500/50 rounded-lg text-green-200 text-sm">
+            {success}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Field */}
           <div>
             <label
@@ -39,6 +132,8 @@ export default function LoginPage() {
               type="email"
               autoComplete="email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
               placeholder="your@email.com"
             />
@@ -58,6 +153,8 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
               placeholder="••••••••"
             />
@@ -80,19 +177,23 @@ export default function LoginPage() {
               </label>
             </div>
             <div className="text-sm">
-              <a
-                href="#"
+              <Link
+                href="/auth/forgot-password"
                 className="text-purple-400 hover:text-purple-300 transition-colors"
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
           </div>
 
           {/* Submit Button */}
           <div className="pt-2">
-            <LiquidButton className="w-full text-white" disabled={isPending}>
-              {isPending ? "Signing in..." : "Sign In"}
+            <LiquidButton
+              type="submit"
+              className="w-full text-white"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign In"}
             </LiquidButton>
           </div>
         </form>
@@ -100,9 +201,9 @@ export default function LoginPage() {
         {/* Sign Up Link */}
         <div className="mt-6 text-center">
           <p className="text-gray-400 text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
-              href="/signup"
+              href="/auth/signup"
               className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
             >
               Sign up

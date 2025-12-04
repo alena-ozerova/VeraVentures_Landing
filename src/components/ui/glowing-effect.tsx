@@ -1,115 +1,89 @@
-"use client";
 
-import { memo, useCallback, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+ "use client";
+
+import { useState, useRef, useEffect } from "react";
 
 interface GlowingEffectProps {
-  blur?: number;
-  spread?: number;
-  variant?: "default" | "white";
-  glow?: boolean;
   className?: string;
   disabled?: boolean;
 }
 
-const GlowingEffect = memo(
-  ({
-    blur = 0,
-    spread = 40,
-    variant = "default",
-    glow = true,
-    className,
-    disabled = false,
-  }: GlowingEffectProps) => {
-    const containerRef = useRef<HTMLDivElement>(null);
+export default function GlowingEffect({ className, disabled = false }: GlowingEffectProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
-    const handleMove = useCallback(
-      (e?: MouseEvent | PointerEvent) => {
-        if (!containerRef.current || disabled) return;
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || disabled) return;
 
-        const container = containerRef.current;
-        const { width, height, left, top } = container.getBoundingClientRect();
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!container) return;
 
-        let mouseX = e?.clientX ?? 0;
-        let mouseY = e?.clientY ?? 0;
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-        if (!e) {
-          const centerX = window.innerWidth / 2;
-          const centerY = window.innerHeight / 2;
-          mouseX = centerX;
-          mouseY = centerY;
-        }
+      setMousePosition({ x, y });
+    };
 
-        const centerX = left + width / 2;
-        const centerY = top + height / 2;
+    const handleMouseEnter = () => setIsHovering(true);
+    const handleMouseLeave = () => {
+      setIsHovering(false);
+      setMousePosition({ x: 0, y: 0 });
+    };
 
-        const angleX = (mouseX - centerX) / (width / 2);
-        const angleY = (mouseY - centerY) / (height / 2);
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseenter", handleMouseEnter);
+    container.addEventListener("mouseleave", handleMouseLeave);
 
-        const shadowX = Math.min(Math.max(angleX * spread, -spread), spread);
-        const shadowY = Math.min(Math.max(angleY * spread, -spread), spread);
+    return () => {
+      container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseenter", handleMouseEnter);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [disabled]);
 
-        const shadowColor =
-          variant === "white"
-            ? "rgba(255, 255, 255, 0.6)"
-            : `rgba(${Math.min(147 + shadowX * 0.5, 255)}, ${Math.min(51 + shadowY * 0.5, 255)}, 234, 0.6)`;
+  if (disabled) return null;
 
-        container.style.boxShadow = `
-          0 0 ${blur}px ${shadowX}px ${shadowY}px ${shadowColor},
-          0 0 ${blur * 2}px ${shadowX * 0.8}px ${shadowY * 0.8}px ${shadowColor}
-        `;
-      },
-      [blur, spread, variant, disabled],
-    );
-
-    useEffect(() => {
-      if (disabled) return;
-
-      const handleScroll = () => handleMove();
-      const handlePointerMove = (e: PointerEvent) => handleMove(e);
-
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      document.body.addEventListener("pointermove", handlePointerMove, {
-        passive: true,
-      });
-
-      // Initialize with a default position
-      handleMove();
-
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-        document.body.removeEventListener("pointermove", handlePointerMove);
-      };
-    }, [handleMove, disabled]);
-
-    return (
+  return (
+    <div
+      ref={containerRef}
+      className={`absolute -inset-2 rounded-xl overflow-hidden pointer-events-none transition-opacity duration-300 ${
+        className || ""
+      }`}
+      style={{
+        opacity: isHovering ? 1 : 0,
+      }}
+    >
+      {/* Follow effect - creates a glow that follows cursor */}
       <div
-        ref={containerRef}
-        className={cn(
-          "absolute inset-0 rounded-xl border-2 border-transparent transition-all duration-300",
-          glow
-            ? variant === "white"
-              ? "border-white"
-              : "border-purple-500"
-            : "",
-          className,
-        )}
+        className="absolute rounded-full"
         style={{
-          ...(glow
-            ? variant === "white"
-              ? {
-                  boxShadow: `0 0 ${blur * 2}px rgba(255, 255, 255, 0.3)`,
-                }
-              : {
-                  boxShadow: `0 0 ${blur * 2}px rgba(147, 51, 234, 0.3)`,
-                }
-            : {}),
+          width: "100px",
+          height: "100px",
+          left: mousePosition.x - 50,
+          top: mousePosition.y - 50,
+          background: "radial-gradient(circle, rgba(147, 51, 234, 0.8) 0%, rgba(59, 130, 246, 0.5) 60%, transparent 100%)",
+          filter: "blur(20px)",
+          pointerEvents: "none",
         }}
       />
-    );
-  },
-);
 
-GlowingEffect.displayName = "GlowingEffect";
-
-export { GlowingEffect };
+      {/* Border effect - creates a glowing border */}
+      <div
+        className="absolute inset-0 rounded-xl"
+        style={{
+          border: "2px solid",
+          borderColor: isHovering
+            ? "rgba(147, 51, 234, 0.8)"
+            : "rgba(147, 51, 234, 0.2)",
+          boxShadow: isHovering
+            ? "0 0 25px rgba(147, 51, 234, 0.6), 0 0 50px rgba(59, 130, 246, 0.4), inset 0 0 25px rgba(147, 51, 234, 0.2)"
+            : "0 0 25px rgba(147, 51, 234, 0.1), 0 0 50px rgba(59, 130, 246, 0.1), inset 0 0 25px rgba(147, 51, 234, 0.1)",
+          transition: "all 0.3s ease",
+        }}
+      />
+    </div>
+  );
+}

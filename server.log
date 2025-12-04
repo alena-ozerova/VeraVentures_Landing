@@ -1,14 +1,20 @@
+node:events:486
+      throw er; // Unhandled 'error' event
+      ^
 
-> vera-ventures@0.1.0 dev
-> next dev
+Error: listen EADDRINUSE: address already in use 0.0.0.0:3001
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at node:net:2206:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1976:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3001
+}
 
- ⚠ Port 3000 is in use by process 55644, using available port 3001 instead.
-   ▲ Next.js 16.0.4 (Turbopack)
-   - Local:         http://localhost:3001
-   - Network:       http://10.201.3.53:3001
-   - Environments: .env.local
-
- ✓ Starting...
- ⨯ Unable to acquire lock at /Users/alenaozerova/Desktop/Landing Page/prolly last/vera-ventures/.next/dev/lock, is another instance of next dev running?
-   Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
-[?25h
+Node.js v25.2.1
