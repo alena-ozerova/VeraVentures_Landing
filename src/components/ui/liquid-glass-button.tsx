@@ -18,11 +18,11 @@ export function LiquidButton({
     <button
       className={cn(
         "relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 overflow-hidden group",
-        "bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-md",
-        "border border-white/20",
-        "hover:from-purple-600/40 hover:to-blue-600/40 hover:border-purple-400/40 hover:scale-105",
-        "text-white shadow-lg hover:shadow-purple-500/25",
-        "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] before:skew-x-12 before:transition-transform before:duration-700 hover:before:translate-x-[100%]",
+        "bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-md",
+        "border border-primary/20",
+        "hover:from-primary/20 hover:to-secondary/20 hover:border-primary/40 hover:scale-105",
+        "text-primary shadow-lg hover:shadow-purple-500/25",
+        "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent before:translate-x-[-100%] before:skew-x-12 before:transition-transform before:duration-700 hover:before:translate-x-[100%]",
         className,
       )}
       {...props}

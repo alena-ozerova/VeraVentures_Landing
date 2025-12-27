@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,77 +21,24 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Reset error message before new attempt
-      setError("");
-
-      // Call API endpoint for authentication
-      console.log("Attempting login with email:", email);
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      console.log("Login response status:", response.status);
-
-      if (!response.ok) {
-        let errorData: any = {};
-        try {
-          errorData = await response.json();
-          console.error("Login error response (JSON):", errorData);
-        } catch (jsonError) {
-          console.error("Failed to parse error response as JSON:", jsonError);
-          try {
-            const textResponse = await response.text();
-            console.error("Login error response (text):", textResponse);
-            errorData = {
-              error: textResponse || `HTTP error! status: ${response.status}`,
-            };
-          } catch (textError) {
-            console.error("Failed to get error response as text:", textError);
-            errorData = { error: `HTTP error! status: ${response.status}` };
-          }
-        }
-
-        setError(errorData.error || `HTTP error! status: ${response.status}`);
-        return;
-      }
-
-      const data = await response.json();
-      console.log("Login response data:", data);
-
-      if (data.success) {
-        // Set up session regardless of demo mode or Supabase
-        const supabase = createClient();
-        const { error } = await supabase.auth.setSession({
-          access_token: data.session?.access_token,
-          refresh_token: data.session?.refresh_token,
-        });
-
-        if (error) {
-          console.error("Session setup error:", error);
-          setError(error.message || "Failed to establish session");
-        } else {
-          console.log("Login successful, redirecting to landing page");
-          setError("");
-          setSuccess(data.message || "Login successful");
-          // Redirect after a short delay to allow the success message to be seen
-          setTimeout(() => {
-            router.push("/landing");
-          }, 1000);
-        }
+      if (error) {
+        console.error("Login error:", error);
+        setError(error.message);
       } else {
-        setError(data.error || "Login failed");
+        console.log("Login successful, redirecting to landing page");
+        setSuccess("Login successful");
+        router.refresh();
+        router.push("/landing");
       }
-    } catch (error: unknown) {
-      console.error("Login fetch error:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred during sign in";
-      setError(errorMessage);
+    } catch (err: unknown) {
+      console.error("Login unexpected error:", err);
+      setError("An unexpected error occurred");
     } finally {
       setLoading(false);
     }

@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,7 +18,7 @@ export default function SignUpPage() {
   const [success, setSuccess] = useState("");
 
   const validateForm = () => {
-    if (!email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       setError("All fields are required");
       return false;
     }
@@ -45,96 +47,37 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
-      // Reset messages before new attempt
-      setError("");
-      setSuccess("");
-
-      // Call API endpoint for signup
-      console.log("Attempting signup with email:", email);
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+          },
         },
-        body: JSON.stringify({ email, password }),
       });
 
-      console.log("Signup response status:", response.status);
-      console.log("Signup response headers:", response.headers);
-
-      if (!response.ok) {
-        let errorData: any = {};
-        try {
-          errorData = await response.json();
-          console.error("Signup error response (JSON):", errorData);
-        } catch (jsonError) {
-          console.error("Failed to parse error response as JSON:", jsonError);
-          try {
-            const textResponse = await response.text();
-            console.error("Signup error response (text):", textResponse);
-            errorData = {
-              error: textResponse || `HTTP error! status: ${response.status}`,
-            };
-          } catch (textError) {
-            console.error("Failed to get error response as text:", textError);
-            errorData = { error: `HTTP error! status: ${response.status}` };
-          }
-        }
-
-        setError(errorData.error || `HTTP error! status: ${response.status}`);
-        return;
-      }
-
-      const data = await response.json();
-      console.log("Signup response data:", data);
-
-      if (data.success) {
-        if (data.needsEmailConfirmation) {
-          // User created but email confirmation is required
-          console.log("Email confirmation required");
-          setError("");
-          // Display success message instead of redirecting
-          setSuccess(
-            data.message ||
-              "Account created successfully. Please check your email to confirm your account.",
-          );
-        } else if (data.session) {
-          // User created and session is available
-          const supabase = createClient();
-          const { error } = await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
-
-          if (error) {
-            console.error("Session setup error:", error);
-            setError(error.message || "Failed to establish session");
-          } else {
-            console.log("Signup successful, redirecting to landing page");
-            setError("");
-            setSuccess("");
-            router.push("/landing");
-          }
-        } else {
-          // User created but no session - show success message
-          console.log("User created without session");
-          setError("");
-          setSuccess(
-            data.message ||
-              "Account created successfully. Please try logging in.",
-          );
-        }
+      if (error) {
+        console.error("Signup error:", error);
+        setError(error.message);
       } else {
-        setError(data.error || "Signup failed");
-        setSuccess("");
+        console.log("Signup successful", data);
+        if (data.session) {
+          router.refresh();
+          router.push("/landing");
+        } else {
+          // Check email verification status
+          setSuccess(
+            "Account created! Please check your email to confirm your account.",
+          );
+        }
       }
-    } catch (error: unknown) {
-      console.error("Signup fetch error:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred during sign up";
-      setError(errorMessage);
+    } catch (err: unknown) {
+      console.error("Signup unexpected error:", err);
+      setError("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -161,6 +104,50 @@ export default function SignUpPage() {
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            {/* First Name Field */}
+            <div>
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
+                First Name
+              </label>
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                autoComplete="given-name"
+                required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
+                placeholder="Jane"
+              />
+            </div>
+
+            {/* Last Name Field */}
+            <div>
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
+                Last Name
+              </label>
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                autoComplete="family-name"
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
+                placeholder="Doe"
+              />
+            </div>
+          </div>
+
           {/* Email Field */}
           <div>
             <label

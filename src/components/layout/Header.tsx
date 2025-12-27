@@ -2,11 +2,12 @@
 
 export default function Header() {
   return (
-    <header className="w-full p-6 backdrop-blur-sm bg-black/30 border-b border-white/10">
-      <div className="container mx-auto flex justify-between items-center">
+    <header className="fixed top-0 w-full z-50 p-6 transition-all duration-300">
+      <div className="absolute inset-0 bg-white/70 backdrop-blur-md border-b border-white/20 shadow-sm" />
+      <div className="relative container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-white font-bold text-xl">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-400">
+        <div className="text-foreground font-bold text-xl">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
             Vera Ventures
           </span>
         </div>

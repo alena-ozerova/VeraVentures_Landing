@@ -14,9 +14,7 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Dynamic Wave Canvas Background */}
-      <div className="absolute inset-0 z-0">
-        <DynamicWaveCanvasBackground />
-      </div>
+
 
       {/* Content Container */}
       <div className="relative z-10 flex min-h-screen flex-col">
