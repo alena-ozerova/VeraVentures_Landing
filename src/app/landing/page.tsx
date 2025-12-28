@@ -1,8 +1,10 @@
 import React from "react";
 import DynamicWaveCanvasBackground from "@/components/ui/dynamic-wave-canvas-background";
-import Header from "@/components/layout/Header";
+
 import HeroSection from "@/components/sections/landing/HeroSection";
-import BenefitsSection from "@/components/sections/landing/BenefitsSection";
+// import BenefitsSection from "@/components/sections/landing/BenefitsSection"; // Deprecated
+import PillarsSection from "@/components/sections/landing/PillarsSection";
+import VisionSection from "@/components/sections/landing/VisionSection";
 import CTASection from "@/components/sections/landing/CTASection";
 import Footer from "@/components/layout/Footer";
 
@@ -19,7 +21,7 @@ export default function LandingPage() {
       {/* Content Container */}
       <div className="relative z-10 flex min-h-screen flex-col">
         {/* Header */}
-        <Header />
+        {/* Header Removed - using global Navbar */}
 
         {/* Main Content */}
         <main className="flex-1 container mx-auto px-6 py-16">
@@ -27,7 +29,11 @@ export default function LandingPage() {
           <HeroSection />
 
           {/* Benefits Section */}
-          <BenefitsSection />
+          {/* Pillars Section */}
+          <PillarsSection />
+
+          {/* Vision Section */}
+          <VisionSection />
 
           {/* CTA Section */}
           <CTASection />
