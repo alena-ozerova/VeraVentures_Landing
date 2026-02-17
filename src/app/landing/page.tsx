@@ -6,6 +6,7 @@ import HeroSection from "@/components/sections/landing/HeroSection";
 import PillarsSection from "@/components/sections/landing/PillarsSection";
 import VisionSection from "@/components/sections/landing/VisionSection";
 import CTASection from "@/components/sections/landing/CTASection";
+import PartnersSection from "@/components/sections/landing/PartnersSection";
 import Footer from "@/components/layout/Footer";
 
 // Performance tip: If animations are lagging, you can reduce the
@@ -37,6 +38,9 @@ export default function LandingPage() {
 
           {/* CTA Section */}
           <CTASection />
+
+          {/* Partners Section */}
+          <PartnersSection />
         </main>
 
         {/* Footer */}

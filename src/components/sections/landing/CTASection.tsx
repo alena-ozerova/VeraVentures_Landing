@@ -37,11 +37,7 @@ export default function CTASection() {
             </LiquidButton>
           </div>
         </div>
-        <div className="mt-8 text-muted-foreground">
-          <p className="text-sm">
-            Join 500+ founders already scaling their ventures with us
-          </p>
-        </div>
+
       </div>
     </section>
   );

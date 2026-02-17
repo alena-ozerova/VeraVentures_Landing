@@ -35,11 +35,7 @@ export default function HeroSection() {
           Member Login
         </LiquidButton>
       </div>
-      <div className="mt-10 text-muted-foreground max-w-2xl">
-        <p className="text-sm">
-          Join over 500+ founders who are already building the future with us
-        </p>
-      </div>
+
     </section>
   );
 }

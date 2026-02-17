@@ -5,23 +5,26 @@ import { motion } from "framer-motion";
 
 export default function VisionSection() {
     const milestones = [
-        { value: 0, label: "Start" },
+        { value: 0, label: "Start", color: "text-purple-500" },
         {
             value: 200,
             label: "200 Members",
             description: "Professional workshops and hands-on student experience.",
+            color: "text-blue-500",
         },
         {
             value: 500,
             label: "500 Members",
             description:
                 "Direct product validation and feedback loops for emerging startups.",
+            color: "text-indigo-500",
         },
         {
             value: 1000,
             label: "1,000 Members",
             description: "A self-sustaining ecosystem of Italy’s most ambitious talent.",
             isGoal: true,
+            color: "text-cyan-400",
         },
     ];
 
@@ -68,7 +71,7 @@ export default function VisionSection() {
 
                                 {/* Content */}
                                 <div className="ml-8 md:ml-0 md:mt-8 md:text-center pt-2 md:pt-0">
-                                    <h4 className={`text-xl font-bold mb-2 ${isLast ? "text-cyan-400" : "text-white"}`}>
+                                    <h4 className={`text-xl font-bold mb-2 ${milestone.color}`}>
                                         {milestone.label}
                                     </h4>
                                     {milestone.description && (
