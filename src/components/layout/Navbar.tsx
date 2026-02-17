@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Navbar({ className }: { className?: string }) {
     const [active, setActive] = useState<string | null>(null);
@@ -39,8 +39,16 @@ export function Navbar({ className }: { className?: string }) {
         router.refresh();
     };
 
-    return (
+    // Hide Navbar on auth pages
+    const isAuthPage = typeof window !== 'undefined' && window.location.pathname.startsWith('/auth');
 
+    // We can also use usePathname from next/navigation for server/client consistency
+    const pathname = usePathname();
+    if (pathname && (pathname.startsWith('/auth') || pathname.startsWith('/profile'))) {
+        return null;
+    }
+
+    return (
         <div
             className={cn("absolute top-0 inset-x-0 h-24 z-50 pointer-events-none", className)}
         >

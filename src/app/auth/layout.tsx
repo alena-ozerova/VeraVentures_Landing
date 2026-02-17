@@ -1,5 +1,5 @@
 import React from "react";
-import DynamicWaveCanvasBackground from "@/components/ui/dynamic-wave-canvas-background";
+
 
 export default function AuthLayout({
   children,
@@ -8,9 +8,8 @@ export default function AuthLayout({
 }) {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Dynamic Wave Canvas Background */}
-      <div className="absolute inset-0 z-0">
-        <DynamicWaveCanvasBackground />
+      {/* Static Background */}
+      <div className="absolute inset-0 z-0 bg-black">
       </div>
 
       {/* Content Container */}
