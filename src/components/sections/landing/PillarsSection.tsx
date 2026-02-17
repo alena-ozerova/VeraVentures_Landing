@@ -54,7 +54,7 @@ export default function PillarsSection() {
                             // Restored mb-32 for significant spacing between cards before they stack
                             // Increased incrementY to 40 for more visible stacking offset
                             incrementY={40}
-                            className={`w-full max-w-4xl mx-auto rounded-3xl p-10 md:p-14 mb-16 backdrop-blur-2xl border shadow-xl ${card.bg} ${card.border} transition-all duration-500`}
+                            className={`w-full max-w-4xl mx-auto rounded-3xl p-6 sm:p-10 md:p-14 mb-16 backdrop-blur-2xl border shadow-xl ${card.bg} ${card.border} transition-all duration-500`}
                         >
                             <div className="flex flex-col h-full justify-center text-left">
                                 <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">

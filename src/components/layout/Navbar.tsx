@@ -55,7 +55,7 @@ export function Navbar({ className }: { className?: string }) {
             {/* Logo - Top Center */}
             <div className="absolute top-5 left-1/2 transform -translate-x-1/2 pointer-events-auto">
                 <Link href="/">
-                    <div className="relative h-28 w-64 md:h-32 md:w-80">
+                    <div className="relative h-20 w-48 sm:h-24 sm:w-56 md:h-32 md:w-80">
                         {/* Using object-contain to ensure it fits well. The user said 'vera-logo' which is a jpg. */}
                         <Image
                             src="/vera-logo.jpg"

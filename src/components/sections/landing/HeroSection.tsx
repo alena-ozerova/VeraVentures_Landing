@@ -8,15 +8,15 @@ import { useRouter } from "next/navigation";
 export default function HeroSection() {
   const router = useRouter();
   return (
-    <section className="relative flex flex-col items-center justify-center text-center py-32 px-6 overflow-hidden">
+    <section className="relative flex flex-col items-center justify-center text-center py-20 px-4 md:py-32 md:px-6 overflow-hidden">
       {/* Background Gradient Blob */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-purple-200/30 rounded-[100%] blur-[120px] -z-10 opacity-50 pointer-events-none" />
 
-      <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-8 max-w-5xl bg-clip-text text-transparent bg-gradient-to-br from-primary via-purple-600 to-cyan-500 tracking-tight leading-tight">
+      <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-foreground mb-6 md:mb-8 max-w-5xl bg-clip-text text-transparent bg-gradient-to-br from-primary via-purple-600 to-cyan-500 tracking-tight leading-tight">
         The future of Italian <br className="hidden md:block" />
         <span className="text-primary">entrepreneurship begins here.</span>
       </h1>
-      <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl leading-relaxed">
+      <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-8 md:mb-12 max-w-3xl leading-relaxed">
         A dedicated community for students driven by startups, venture capital, and
         innovation. We provide the network and the experience to help you find
         your place in the ecosystem.
